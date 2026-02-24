@@ -12,6 +12,35 @@
 
 #include "philo.h"
 
+static long	ft_atol(const char *str, int *error) //evitar overflow.
+{
+	int		i;
+	int		sign;
+	long	res;
+
+	i = 0;
+	sign = 1;
+	res = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	if (!str[i] || (str[i] < '0' || str[i] > '9'))
+		return (*error = 1, 0);
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		if (res > (LONG_MAX - (str[i] - '0')) / 10) 
+			return (*error = 1, 0);
+		res = res * 10 + (str[i] - '0');
+		i++;
+	}
+	return (res * sign); //no es necesario verificar q al final no haya basura porque, check content ya revisó eso. 
+}
+
 static int	check_content(char *arg)
 {
 	int	i;
@@ -36,10 +65,15 @@ static int	check_content(char *arg)
 static int	validate_arg(char *arg, int min, int max)
 {
 	int	n;
+	int	error;
 
+	error = 0;
 	if (!check_content(arg))
 		return (-1);
-	n = ft_atoi(arg);
+	n = ft_atol(arg, &error);
+	if (error)
+		return (-1);
+	//n = ft_atoi(arg);
 	if (n < min || (max != -1 && n > max))
 		return (-1);
 	return (n);
