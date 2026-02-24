@@ -42,7 +42,7 @@ static void	lock_forks(t_philo *philo)
 
 //luego moverlo y verificarlo.
 
-int	smart_pause(t_philo *phi, long duration)
+static int	smart_pause(t_philo *phi, long duration)
 {
 	long	start;
 
